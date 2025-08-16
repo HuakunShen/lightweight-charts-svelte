@@ -132,6 +132,8 @@ export interface BaseSeriesProps<TData> {
 	visible?: boolean;
 	/** Index of the pane where the series should be created (0 = main pane) */
 	paneIndex?: number;
+	/** Price scale ID ('left', 'right', or custom scale ID) */
+	priceScaleId?: string;
 }
 
 /**

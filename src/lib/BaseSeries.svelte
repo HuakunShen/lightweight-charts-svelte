@@ -45,6 +45,7 @@
 		reactive = true,
 		visible = true,
 		paneIndex,
+		priceScaleId,
 		seriesType,
 		seriesOptions = {},
 		title,
@@ -67,11 +68,12 @@
 	$effect(() => {
 		if (chartContext.chart && !series && !initialized) {
 			try {
-				// Combine series options with title and visibility
+				// Combine series options with title, visibility, and price scale
 				const finalOptions = {
 					...seriesOptions,
 					...(title && { title }),
-					...(visible !== undefined && { visible })
+					...(visible !== undefined && { visible }),
+					...(priceScaleId && { priceScaleId })
 				};
 				
 				// Create series based on type using correct API

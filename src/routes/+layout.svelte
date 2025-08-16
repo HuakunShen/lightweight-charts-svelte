@@ -9,7 +9,11 @@
 		{ href: '/bar', label: 'Bar Chart', icon: '📊' },
 		{ href: '/histogram', label: 'Histogram', icon: '📈' },
 		{ href: '/curve', label: 'Yield Curve', icon: '📉' },
-		{ href: '/panes', label: 'Multiple Panes', icon: '🔲' }
+		{ href: '/panes', label: 'Multiple Panes', icon: '🔲' },
+		{ href: '/price-scale', label: 'Price Scale', icon: '📏' },
+		{ href: '/time-scale', label: 'Time Scale', icon: '⏱️' },
+		{ href: '/legends', label: 'Legends', icon: '🏷️' },
+		{ href: '/markers', label: 'Markers', icon: '📍' }
 	];
 </script>
 
