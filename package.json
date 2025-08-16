@@ -35,7 +35,8 @@
 		}
 	},
 	"peerDependencies": {
-		"svelte": "^5.0.0"
+		"svelte": "^5.0.0",
+		"lightweight-charts": ">=5.0.0"
 	},
 	"devDependencies": {
 		"@chromatic-com/storybook": "^4.1.0",
@@ -61,6 +62,7 @@
 		"eslint-plugin-storybook": "^9.1.2",
 		"eslint-plugin-svelte": "^3.0.0",
 		"globals": "^16.0.0",
+		"lightweight-charts": "^5.0.8",
 		"mdsvex": "^0.12.3",
 		"playwright": "^1.53.0",
 		"prettier": "^3.4.2",
@@ -80,5 +82,6 @@
 	},
 	"keywords": [
 		"svelte"
-	]
+	],
+	"dependencies": {}
 }

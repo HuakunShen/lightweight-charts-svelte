@@ -1,58 +1,35 @@
-# Svelte library
+# Svelte Lightweight Charts
 
-Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
+This is a Svelte Component Library of Lightweight Charts.
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+Sample Usage
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+```svelte
+<Chart width={800} height={600}>
+	<LineSeries {data} />
+</Chart>
 ```
 
-## Developing
+```svelte
+<script>
+	let chart: Chart;
+</script>
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+<Chart width={400} height={300} bind:this={chart} />
+<button on:click={() => chart.timeScale().fitContent()}>Fit Content</button>
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
-
-## Building
-
-To build your library:
-
-```sh
-npm pack
+```svelte
+<Chart width={600} height={300}>
+	<LineSeries {data}>
+		<PriceLine title="minimum price" price={minimumPrice} />
+		<PriceLine title="average price" price={avgPrice} />
+		<PriceLine title="maximum price" price={maximumPrice} />
+	</LineSeries>
+</Chart>
 ```
 
-To create a production version of your showcase app:
+## Requirements
 
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```sh
-npm publish
-```
+- Fully Typed with TypeScript
+- Follow the sample usage above
