@@ -4,9 +4,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Svelte Component Library wrapper for TradingView's Lightweight Charts library. The project aims to provide a declarative, type-safe way to create financial charts in Svelte applications.
+This is a Svelte Component Library wrapper for TradingView's Lightweight Charts library. The project provides a declarative, type-safe way to create financial charts in Svelte 5 applications.
 
-**Current State**: The library structure is set up but components are not yet implemented. Currently has demo pages using direct lightweight-charts API calls rather than Svelte components.
+**Current State**: The library is fully implemented with:
+- Complete Svelte 5 components for all chart and series types
+- Full TypeScript support using native lightweight-charts types
+- Reactive data updates and declarative API
+- Working demo pages showcasing all features
+
+## Component Architecture
+
+The library follows a declarative component hierarchy:
+
+```svelte
+<Chart options={chartOptions}>
+  <LineSeries data={lineData} color="#2962FF" />
+  <AreaSeries data={areaData} topColor="#26a69a" />
+  <CandlestickSeries data={candlestickData} upColor="#26a69a" downColor="#ef5350" />
+  <PriceLine price={100} title="Target Price" />
+</Chart>
+```
+
+### Available Components:
+- **Chart**: Root chart container (supports both regular and yield curve charts)
+- **Series Components**: LineSeries, AreaSeries, BarSeries, CandlestickSeries, HistogramSeries, BaselineSeries
+- **PriceLine**: Dynamic price lines (nested within series)
+
+### Key Features:
+- **Fully Typed**: All props use native TypeScript types from lightweight-charts
+- **Reactive**: Data updates automatically trigger chart redraws with `reactive={true}`
+- **SSR Safe**: Components handle browser-only rendering correctly
+- **Context-Based**: Chart and series communicate via Svelte contexts
+- **Ref Access**: Direct access to underlying chart/series APIs via `bind:this={chart}`
 
 ## Development Commands
 
@@ -68,3 +97,28 @@ Based on README examples, the library should provide:
 - `svelte` v5 - Framework (peer dependency)
 - `@tailwindcss/vite` - TailwindCSS v4 integration
 - `vitest` + `@vitest/browser` - Testing with browser environment
+
+## Implementation Notes
+
+### Type Safety
+The library avoids using `any` types and instead:
+- Re-exports all native types from `lightweight-charts`
+- Uses proper generic constraints for series options
+- Filters undefined values from props before passing to underlying APIs
+- Provides fully typed component APIs with intellisense support
+
+### Svelte 5 Features
+- Uses `$state()` for reactive chart/series instances
+- Uses `$effect()` for reactive data and options updates
+- Uses `$derived()` for computed series options
+- Follows Svelte 5 component patterns with `$props()`
+
+### Chart Context System
+- `ChartContext` provides chart instance to child series
+- `SeriesContext` provides series instance to nested components (like PriceLine)
+- Automatic series registration/cleanup on mount/unmount
+
+### Data Handling
+- Supports both static and reactive data updates
+- Automatic data validation and type checking
+- Efficient updates only when data actually changes
