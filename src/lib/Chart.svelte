@@ -94,6 +94,21 @@
 			chartContext.chart = null;
 		}
 	}
+	
+	// Pane management methods
+	export function addPane(preserveEmptyPane?: boolean) {
+		return chart?.addPane(preserveEmptyPane) ?? null;
+	}
+	
+	export function panes() {
+		return chart?.panes() ?? [];
+	}
+	
+	export function removePane(index: number) {
+		if (chart) {
+			chart.removePane(index);
+		}
+	}
 </script>
 
 <div

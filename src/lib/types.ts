@@ -15,6 +15,7 @@ import type {
 	IChartApi,
 	ISeriesApi,
 	IPriceLine,
+	IPaneApi,
 	IYieldCurveChartApi,
 	LineData, 
 	LineStyleOptions,
@@ -48,6 +49,7 @@ export type {
 	DeepPartial,
 	IChartApi,
 	ISeriesApi,
+	IPaneApi,
 	IYieldCurveChartApi,
 	Time,
 	UTCTimestamp,
@@ -128,6 +130,8 @@ export interface BaseSeriesProps<TData> {
 	reactive?: boolean;
 	/** Whether this series is visible */
 	visible?: boolean;
+	/** Index of the pane where the series should be created (0 = main pane) */
+	paneIndex?: number;
 }
 
 /**

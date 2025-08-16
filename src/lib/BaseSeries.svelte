@@ -44,6 +44,7 @@
 		data,
 		reactive = true,
 		visible = true,
+		paneIndex,
 		seriesType,
 		seriesOptions = {},
 		title,
@@ -90,7 +91,7 @@
 				}
 				
 				if (seriesDefinition) {
-					series = chartContext.chart.addSeries(seriesDefinition, finalOptions);
+					series = chartContext.chart.addSeries(seriesDefinition, finalOptions, paneIndex);
 					
 					// Register series with chart context
 					chartContext.registerSeries(seriesId, series);
@@ -174,6 +175,16 @@
 	
 	export function priceScale() {
 		return series?.priceScale() ?? null;
+	}
+	
+	export function moveToPane(newPaneIndex: number) {
+		if (series) {
+			series.moveToPane(newPaneIndex);
+		}
+	}
+	
+	export function getPane() {
+		return series?.getPane() ?? null;
 	}
 </script>
 

@@ -29,22 +29,54 @@
 	let chart: Chart;
 </script>
 
-<Chart
-	bind:this={chart}
-	width={800}
-	height={400}
-	options={chartOptions}
-	yieldCurve={true}
-	class="w-full"
->
-	<LineSeries data={curveData} color="#2962FF" title="Yield Curve" />
-</Chart>
+<svelte:head>
+	<title>Yield Curve Example - Svelte Lightweight Charts</title>
+</svelte:head>
 
-<div class="mt-4 space-x-2">
-	<button
-		class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-		on:click={() => chart?.timeScale()?.fitContent()}
-	>
-		Fit Content
-	</button>
+<div class="container mx-auto px-4 py-8">
+	<h1 class="text-3xl font-bold text-gray-800 mb-2">Yield Curve Chart Example</h1>
+	<p class="text-gray-600 mb-6">
+		Yield curve charts show the relationship between interest rates and different time periods.
+		This example demonstrates a special chart type for financial yield curve visualization.
+	</p>
+
+	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+		<Chart
+			bind:this={chart}
+			width={900}
+			height={500}
+			options={chartOptions}
+			yieldCurve={true}
+			class="border border-gray-200 rounded mb-4"
+		>
+			<LineSeries data={curveData} color="#2962FF" title="Yield Curve" />
+		</Chart>
+
+		<div class="flex flex-wrap gap-2">
+			<button
+				class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
+				on:click={() => chart?.timeScale()?.fitContent()}
+			>
+				Fit Content
+			</button>
+			<button
+				class="bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded transition-colors"
+				on:click={() => chart?.priceScale()?.applyOptions({ autoScale: true })}
+			>
+				Auto Scale
+			</button>
+		</div>
+	</div>
+
+	<div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+		<h3 class="font-medium text-purple-800 mb-2">About Yield Curves</h3>
+		<ul class="text-sm text-purple-700 space-y-1">
+			<li>• Shows interest rates across different maturity periods</li>
+			<li>• X-axis represents time to maturity (months)</li>
+			<li>• Y-axis represents yield/interest rate percentage</li>
+			<li>• Normal curve slopes upward (longer terms = higher yields)</li>
+			<li>• Inverted curves can signal economic conditions</li>
+			<li>• Uses specialized chart configuration for yield data</li>
+		</ul>
+	</div>
 </div>

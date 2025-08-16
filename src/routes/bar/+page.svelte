@@ -34,15 +34,58 @@
 	let chart: Chart;
 </script>
 
-<Chart bind:this={chart} width={800} height={400} options={chartOptions} class="w-full">
-	<BarSeries data={barData} upColor="#26a69a" downColor="#ef5350" title="OHLC Bar Series" />
-</Chart>
+<svelte:head>
+	<title>Bar Chart Example - Svelte Lightweight Charts</title>
+</svelte:head>
 
-<div class="mt-4 space-x-2">
-	<button
-		class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-		on:click={() => chart?.timeScale()?.fitContent()}
-	>
-		Fit Content
-	</button>
+<div class="container mx-auto px-4 py-8">
+	<h1 class="text-3xl font-bold text-gray-800 mb-2">Bar Chart Example</h1>
+	<p class="text-gray-600 mb-6">
+		Bar charts display OHLC (Open, High, Low, Close) data as vertical bars. 
+		Each bar shows the price range and direction for a given time period.
+	</p>
+
+	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+		<Chart 
+			bind:this={chart} 
+			width={900} 
+			height={500} 
+			options={chartOptions} 
+			class="border border-gray-200 rounded mb-4"
+		>
+			<BarSeries 
+				data={barData} 
+				upColor="#26a69a" 
+				downColor="#ef5350" 
+				title="OHLC Bar Series" 
+			/>
+		</Chart>
+
+		<div class="flex flex-wrap gap-2">
+			<button
+				class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
+				on:click={() => chart?.timeScale()?.fitContent()}
+			>
+				Fit Content
+			</button>
+			<button
+				class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition-colors"
+				on:click={() => chart?.timeScale()?.scrollToRealTime()}
+			>
+				Scroll to Latest
+			</button>
+		</div>
+	</div>
+
+	<div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+		<h3 class="font-medium text-blue-800 mb-2">About Bar Charts</h3>
+		<ul class="text-sm text-blue-700 space-y-1">
+			<li>• Each bar represents OHLC data for a time period</li>
+			<li>• Green bars indicate closing price higher than opening price</li>
+			<li>• Red bars indicate closing price lower than opening price</li>
+			<li>• The vertical line shows the high-low range</li>
+			<li>• Horizontal marks on the left show the opening price</li>
+			<li>• Horizontal marks on the right show the closing price</li>
+		</ul>
+	</div>
 </div>

@@ -31,6 +31,7 @@ export type {
 	DeepPartial,
 	IChartApi,
 	ISeriesApi,
+	IPaneApi,
 	IYieldCurveChartApi,
 	Time,
 	UTCTimestamp,
