@@ -23,7 +23,7 @@ const config = {
 		// 	assets: 'build'
 		// }),
 		paths: {
-			base: '/svelte-lightweight-charts'
+			base: '/lightweight-charts-svelte'
 		},
 		alias: {
 			$lib: 'src/lib'

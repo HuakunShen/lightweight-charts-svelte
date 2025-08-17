@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "svelte-lightweight-charts",
+      "name": "lightweight-charts-svelte",
       "dependencies": {
         "@sveltejs/adapter-static": "^3.0.9",
       },

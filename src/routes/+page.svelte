@@ -180,7 +180,7 @@
 		<CardContent>
 			<pre class="overflow-x-auto text-sm"><code
 					>&lt;script&gt;
-  import &#123; Chart, LineSeries &#125; from 'svelte-lightweight-charts';
+  import &#123; Chart, LineSeries &#125; from 'lightweight-charts-svelte';
   
   const data = [
     &#123; time: '2023-01-01', value: 100 &#125;,

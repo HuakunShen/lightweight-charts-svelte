@@ -4,7 +4,7 @@
 This plan outlines the implementation of a modern Svelte 5 component library for TradingView's Lightweight Charts v5, providing a declarative, type-safe API that reuses all native types from the lightweight-charts library.
 
 ## Target API Design
-Based on the old svelte-lightweight-charts library, our target API will be:
+Based on the old lightweight-charts-svelte library, our target API will be:
 
 ```svelte
 <Chart width={800} height={600} {options}>
