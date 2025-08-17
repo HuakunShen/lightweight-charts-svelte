@@ -107,7 +107,7 @@
 					width={900} 
 					height={500} 
 					options={chartOptions} 
-					class="border border-gray-200 rounded"
+					class="border border-border rounded"
 				>
 				<LineSeries 
 					bind:this={lineSeries}

@@ -311,7 +311,7 @@
 				width={900}
 				height={500}
 				options={chartOptions}
-				class="mb-4 rounded border border-gray-200"
+				class="mb-4 rounded border border-border"
 			>
 			<CandlestickSeries
 				bind:this={candlestickSeries}
