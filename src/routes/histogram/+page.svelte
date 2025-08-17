@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { Chart, HistogramSeries, type ChartOptions, type DeepPartial, ColorType, type UTCTimestamp } from '../../lib/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
 
 	// Chart options
 	const chartOptions: DeepPartial<ChartOptions> = {
@@ -29,13 +32,15 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="text-3xl font-bold text-gray-800 mb-2">Histogram Chart Example</h1>
-	<p class="text-gray-600 mb-6">
-		Histogram charts are ideal for displaying volume data, showing discrete values over time.
-		Each bar can have a custom color to represent different data states.
-	</p>
-
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+	<Card class="mb-6">
+		<CardHeader>
+			<CardTitle class="text-3xl">Histogram Chart Example</CardTitle>
+			<CardDescription>
+				Histogram charts are ideal for displaying volume data, showing discrete values over time.
+				Each bar can have a custom color to represent different data states.
+			</CardDescription>
+		</CardHeader>
+		<CardContent>
 		<Chart 
 			bind:this={chart} 
 			width={900} 
@@ -50,30 +55,29 @@
 			/>
 		</Chart>
 
-		<div class="flex flex-wrap gap-2">
-			<button
-				class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-				on:click={() => chart?.timeScale()?.fitContent()}
-			>
-				Fit Content
-			</button>
-			<button
-				class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded transition-colors"
-				on:click={() => chart?.priceScale()?.applyOptions({ autoScale: true })}
-			>
-				Auto Scale
-			</button>
-		</div>
-	</div>
+			<div class="flex flex-wrap gap-2">
+				<Button onclick={() => chart?.timeScale()?.fitContent()}>
+					Fit Content
+				</Button>
+				<Button variant="secondary" onclick={() => chart?.priceScale()?.applyOptions({ autoScale: true })}>
+					Auto Scale
+				</Button>
+			</div>
+		</CardContent>
+	</Card>
 
-	<div class="bg-green-50 border border-green-200 rounded-lg p-4">
-		<h3 class="font-medium text-green-800 mb-2">About Histogram Charts</h3>
-		<ul class="text-sm text-green-700 space-y-1">
-			<li>• Perfect for displaying volume or indicator data</li>
-			<li>• Each bar represents a single value at a point in time</li>
-			<li>• Bars can have individual colors (red bars in this example indicate specific conditions)</li>
-			<li>• Commonly used for trading volume, RSI, MACD histograms</li>
-			<li>• Can be combined with other series types in multiple panes</li>
-		</ul>
-	</div>
+	<Alert>
+		<AlertDescription>
+			<div class="space-y-2">
+				<h3 class="font-medium mb-2">About Histogram Charts</h3>
+				<ul class="text-sm space-y-1">
+					<li>• Perfect for displaying volume or indicator data</li>
+					<li>• Each bar represents a single value at a point in time</li>
+					<li>• Bars can have individual colors (red bars in this example indicate specific conditions)</li>
+					<li>• Commonly used for trading volume, RSI, MACD histograms</li>
+					<li>• Can be combined with other series types in multiple panes</li>
+				</ul>
+			</div>
+		</AlertDescription>
+	</Alert>
 </div>

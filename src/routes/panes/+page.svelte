@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { Chart, CandlestickSeries, HistogramSeries, LineSeries, ColorType, type UTCTimestamp, type CandlestickData, type HistogramData, type LineData } from '../../lib/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
 
 	// Chart options
 	const chartOptions = {
@@ -103,20 +106,21 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="text-3xl font-bold text-gray-800 mb-2">Multiple Panes Example</h1>
-	<p class="text-gray-600 mb-6">
+	<h1 class="text-3xl font-bold mb-2">Multiple Panes Example</h1>
+	<p class="mb-6">
 		This example demonstrates how to use multiple panes to display different types of data separately.
 		Price data is in the main pane, volume in the second pane, and RSI in the third pane.
 	</p>
 
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-		<Chart 
-			bind:this={chart} 
-			width={900} 
-			height={600} 
-			options={chartOptions} 
-			class="border border-gray-200 rounded"
-		>
+	<Card class="mb-6">
+		<CardContent class="p-6">
+			<Chart 
+				bind:this={chart} 
+				width={900} 
+				height={600} 
+				options={chartOptions} 
+				class="border border-gray-200 rounded"
+			>
 			<!-- Main price chart in pane 0 -->
 			<CandlestickSeries 
 				data={priceData}
@@ -146,101 +150,126 @@
 				title="RSI"
 				paneIndex={2}
 			/>
-		</Chart>
-	</div>
+			</Chart>
+		</CardContent>
+	</Card>
 
-	<div class="bg-gray-50 rounded-lg p-6">
-		<h2 class="text-xl font-semibold text-gray-800 mb-4">Pane Controls</h2>
-		<div class="space-y-4">
-			<div class="flex flex-wrap gap-2">
-				<button
-					class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-					on:click={addNewPane}
-				>
-					Add New Pane
-				</button>
-				<button
-					class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded transition-colors"
-					on:click={removeLastPane}
-					disabled={currentPanes <= 1}
-				>
-					Remove Last Pane
-				</button>
-				<button
-					class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded transition-colors"
-					on:click={() => chart?.timeScale()?.fitContent()}
-				>
-					Fit Content
-				</button>
-			</div>
-
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div class="bg-white rounded p-4 border">
-					<h3 class="font-medium text-gray-700 mb-2">Move Volume Series</h3>
-					<div class="space-x-2">
-						<button
-							class="bg-purple-500 hover:bg-purple-600 text-white text-sm py-1 px-3 rounded transition-colors"
-							on:click={() => moveVolumeToPane(0)}
-						>
-							To Pane 0
-						</button>
-						<button
-							class="bg-purple-500 hover:bg-purple-600 text-white text-sm py-1 px-3 rounded transition-colors"
-							on:click={() => moveVolumeToPane(1)}
-						>
-							To Pane 1
-						</button>
-						<button
-							class="bg-purple-500 hover:bg-purple-600 text-white text-sm py-1 px-3 rounded transition-colors"
-							on:click={() => moveVolumeToPane(2)}
-						>
-							To Pane 2
-						</button>
-					</div>
+	<Card>
+		<CardHeader>
+			<CardTitle>Pane Controls</CardTitle>
+		</CardHeader>
+		<CardContent>
+			<div class="space-y-4">
+				<div class="flex flex-wrap gap-2">
+					<Button
+						variant="default"
+						onclick={addNewPane}
+					>
+						Add New Pane
+					</Button>
+					<Button
+						variant="destructive"
+						onclick={removeLastPane}
+						disabled={currentPanes <= 1}
+					>
+						Remove Last Pane
+					</Button>
+					<Button
+						variant="outline"
+						onclick={() => chart?.timeScale()?.fitContent()}
+					>
+						Fit Content
+					</Button>
 				</div>
 
-				<div class="bg-white rounded p-4 border">
-					<h3 class="font-medium text-gray-700 mb-2">Move RSI Series</h3>
-					<div class="space-x-2">
-						<button
-							class="bg-orange-500 hover:bg-orange-600 text-white text-sm py-1 px-3 rounded transition-colors"
-							on:click={() => moveRsiToPane(0)}
-						>
-							To Pane 0
-						</button>
-						<button
-							class="bg-orange-500 hover:bg-orange-600 text-white text-sm py-1 px-3 rounded transition-colors"
-							on:click={() => moveRsiToPane(1)}
-						>
-							To Pane 1
-						</button>
-						<button
-							class="bg-orange-500 hover:bg-orange-600 text-white text-sm py-1 px-3 rounded transition-colors"
-							on:click={() => moveRsiToPane(2)}
-						>
-							To Pane 2
-						</button>
-					</div>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<Card>
+						<CardHeader>
+							<CardTitle class="text-base">Move Volume Series</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<div class="space-x-2">
+								<Button
+									variant="secondary"
+									size="sm"
+									onclick={() => moveVolumeToPane(0)}
+								>
+									To Pane 0
+								</Button>
+								<Button
+									variant="secondary"
+									size="sm"
+									onclick={() => moveVolumeToPane(1)}
+								>
+									To Pane 1
+								</Button>
+								<Button
+									variant="secondary"
+									size="sm"
+									onclick={() => moveVolumeToPane(2)}
+								>
+									To Pane 2
+								</Button>
+							</div>
+						</CardContent>
+					</Card>
+
+					<Card>
+						<CardHeader>
+							<CardTitle class="text-base">Move RSI Series</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<div class="space-x-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onclick={() => moveRsiToPane(0)}
+								>
+									To Pane 0
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									onclick={() => moveRsiToPane(1)}
+								>
+									To Pane 1
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									onclick={() => moveRsiToPane(2)}
+								>
+									To Pane 2
+								</Button>
+							</div>
+						</CardContent>
+					</Card>
 				</div>
-			</div>
 
-			<div class="bg-white rounded p-4 border">
-				<h3 class="font-medium text-gray-700 mb-2">Current Chart Info</h3>
-				<p class="text-sm text-gray-600">
-					Total panes: <span class="font-mono bg-gray-100 px-1 rounded">{currentPanes}</span>
-				</p>
+				<Card>
+					<CardHeader>
+						<CardTitle class="text-base">Current Chart Info</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<p class="text-sm text-muted-foreground">
+							Total panes: <span class="font-mono bg-muted px-1 rounded">{currentPanes}</span>
+						</p>
+					</CardContent>
+				</Card>
 			</div>
-		</div>
-	</div>
+		</CardContent>
+	</Card>
 
-	<div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-		<h3 class="font-medium text-blue-800 mb-2">About Panes</h3>
-		<ul class="text-sm text-blue-700 space-y-1">
-			<li>• Panes allow you to separate different types of data visually</li>
-			<li>• Each pane can have its own price scale and formatting</li>
-			<li>• Series can be moved between panes dynamically</li>
-			<li>• Panes can be resized by dragging the separator between them</li>
-			<li>• You can customize separator colors and disable resizing if needed</li>
-		</ul>
-	</div>
+	<Alert class="mt-6">
+		<AlertDescription>
+			<h3 class="font-medium mb-2">About Panes</h3>
+			<ul class="text-sm space-y-1">
+				<li>• Panes allow you to separate different types of data visually</li>
+				<li>• Each pane can have its own price scale and formatting</li>
+				<li>• Series can be moved between panes dynamically</li>
+				<li>• Panes can be resized by dragging the separator between them</li>
+				<li>• You can customize separator colors and disable resizing if needed</li>
+			</ul>
+		</AlertDescription>
+	</Alert>
 </div>

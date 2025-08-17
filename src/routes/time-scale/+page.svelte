@@ -1,5 +1,11 @@
 <script lang="ts">
 	import { Chart, CandlestickSeries, HistogramSeries, LineSeries, ColorType, type UTCTimestamp, type CandlestickData, type HistogramData, type LineData } from '../../lib/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
+import { Label } from '$lib/components/ui/label/index.js';
+import { Checkbox } from '$lib/components/ui/checkbox/index.js';
+
 
 	// Chart options with time scale configuration
 	const chartOptions = {
@@ -89,30 +95,32 @@
 	let secondsVisible = $state(false);
 
 	// Time scale controls
-	function updateBarSpacing(value: number) {
-		barSpacing = value;
+	function updateBarSpacing(value: number[]) {
+		barSpacing = value[0];
 		const chartInstance = chart.getChart();
 		if (chartInstance) {
 			chartInstance.timeScale().applyOptions({ barSpacing });
 		}
 	}
 
-	function updateRightOffset(value: number) {
-		rightOffset = value;
+	function updateRightOffset(value: number[]) {
+		rightOffset = value[0];
 		const chartInstance = chart.getChart();
 		if (chartInstance) {
 			chartInstance.timeScale().applyOptions({ rightOffset });
 		}
 	}
 
-	function updateTimeVisible() {
+	function updateTimeVisible(checked: boolean) {
+		timeVisible = checked;
 		const chartInstance = chart.getChart();
 		if (chartInstance) {
 			chartInstance.timeScale().applyOptions({ timeVisible });
 		}
 	}
 
-	function updateSecondsVisible() {
+	function updateSecondsVisible(checked: boolean) {
+		secondsVisible = checked;
 		const chartInstance = chart.getChart();
 		if (chartInstance) {
 			chartInstance.timeScale().applyOptions({ secondsVisible });
@@ -122,13 +130,13 @@
 	// Reactive statements to update chart when state changes
 	$effect(() => {
 		if (chart) {
-			updateTimeVisible();
+			updateTimeVisible(timeVisible);
 		}
 	});
 
 	$effect(() => {
 		if (chart) {
-			updateSecondsVisible();
+			updateSecondsVisible(secondsVisible);
 		}
 	});
 
@@ -222,20 +230,21 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="text-3xl font-bold text-gray-800 mb-2">Time Scale Examples</h1>
-	<p class="text-gray-600 mb-6">
+	<h1 class="text-3xl font-bold mb-2">Time Scale Examples</h1>
+	<p class="mb-6">
 		This example demonstrates time scale management including navigation, zooming, spacing controls, 
 		and various time-related configuration options.
 	</p>
 
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-		<Chart 
-			bind:this={chart} 
-			width={900} 
-			height={600} 
-			options={chartOptions} 
-			class="border border-gray-200 rounded mb-4"
-		>
+	<Card class="mb-6">
+		<CardContent class="p-6">
+			<Chart 
+				bind:this={chart} 
+				width={900} 
+				height={600} 
+				options={chartOptions} 
+				class="border border-gray-200 rounded mb-4"
+			>
 			<!-- Price data in main pane -->
 			<CandlestickSeries 
 				data={priceData}
@@ -263,192 +272,237 @@
 				title="Volume"
 				paneIndex={1}
 			/>
-		</Chart>
-	</div>
+			</Chart>
+		</CardContent>
+	</Card>
 
 	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 		<!-- Spacing and Offset Controls -->
-		<div class="bg-white rounded-lg shadow p-6">
-			<h3 class="text-lg font-semibold text-gray-800 mb-4">Spacing & Offset</h3>
-			<div class="space-y-4">
-				<div>
-					<label for="bar-spacing" class="block text-sm font-medium text-gray-700 mb-2">
-						Bar Spacing: {barSpacing}px
-					</label>
-					<input
-						id="bar-spacing"
-						type="range"
-						min="1"
-						max="20"
-						bind:value={barSpacing}
-						on:input={(e) => updateBarSpacing(Number((e.target as HTMLInputElement).value))}
-						class="w-full"
-					>
-				</div>
-				<div>
-					<label for="right-offset" class="block text-sm font-medium text-gray-700 mb-2">
-						Right Offset: {rightOffset}
-					</label>
-					<input
-						id="right-offset"
-						type="range"
-						min="0"
-						max="50"
-						bind:value={rightOffset}
-						on:input={(e) => updateRightOffset(Number((e.target as HTMLInputElement).value))}
-						class="w-full"
-					>
-				</div>
-				<div class="space-y-2">
-					<label class="flex items-center space-x-2">
+		<Card>
+			<CardHeader>
+				<CardTitle>Spacing & Offset</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<div class="space-y-4">
+					<div>
+						<Label for="bar-spacing" class="text-sm font-medium mb-2 block">
+							Bar Spacing: {barSpacing}px
+						</Label>
 						<input
-							type="checkbox"
-							bind:checked={timeVisible}
-							class="form-checkbox h-4 w-4 text-blue-600"
-						>
-						<span class="text-gray-700">Show Time</span>
-					</label>
-					<label class="flex items-center space-x-2">
+							id="bar-spacing"
+							type="range"
+							min="1"
+							max="20"
+							step="1"
+							value={barSpacing}
+							oninput={(e: Event) => updateBarSpacing([parseInt((e.target as HTMLInputElement).value)])}
+							class="w-full"
+						/>
+					</div>
+					<div>
+						<Label for="right-offset" class="text-sm font-medium mb-2 block">
+							Right Offset: {rightOffset}
+						</Label>
 						<input
-							type="checkbox"
-							bind:checked={secondsVisible}
-							class="form-checkbox h-4 w-4 text-blue-600"
-						>
-						<span class="text-gray-700">Show Seconds</span>
-					</label>
+							id="right-offset"
+							type="range"
+							min="0"
+							max="50"
+							step="1"
+							value={rightOffset}
+							oninput={(e: Event) => updateRightOffset([parseInt((e.target as HTMLInputElement).value)])}
+							class="w-full"
+						/>
+					</div>
+					<div class="space-y-3">
+						<div class="flex items-center space-x-2">
+							<Checkbox
+							id="time-visible"
+							checked={timeVisible}
+							onCheckedChange={(checked) => updateTimeVisible(checked)}
+						/>
+							<Label for="time-visible">Show Time</Label>
+						</div>
+						<div class="flex items-center space-x-2">
+							<Checkbox
+							id="seconds-visible"
+							checked={secondsVisible}
+							onCheckedChange={(checked) => updateSecondsVisible(checked)}
+						/>
+							<Label for="seconds-visible">Show Seconds</Label>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
+			</CardContent>
+		</Card>
 
 		<!-- Navigation Controls -->
-		<div class="bg-white rounded-lg shadow p-6">
-			<h3 class="text-lg font-semibold text-gray-800 mb-4">Navigation</h3>
-			<div class="space-y-2">
-				<button
-					class="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={() => scrollToPosition('start')}
-				>
-					Go to Start
-				</button>
-				<button
-					class="w-full bg-green-500 hover:bg-green-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={() => scrollToPosition('middle')}
-				>
-					Go to Middle
-				</button>
-				<button
-					class="w-full bg-purple-500 hover:bg-purple-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={() => scrollToPosition('end')}
-				>
-					Go to End
-				</button>
-				<button
-					class="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={scrollToRealTime}
-				>
-					Scroll to Real Time
-				</button>
-			</div>
-		</div>
+		<Card>
+			<CardHeader>
+				<CardTitle>Navigation</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<div class="space-y-2">
+					<Button
+						variant="default"
+						size="sm"
+						class="w-full"
+						onclick={() => scrollToPosition('start')}
+					>
+						Go to Start
+					</Button>
+					<Button
+						variant="secondary"
+						size="sm"
+						class="w-full"
+						onclick={() => scrollToPosition('middle')}
+					>
+						Go to Middle
+					</Button>
+					<Button
+						variant="outline"
+						size="sm"
+						class="w-full"
+						onclick={() => scrollToPosition('end')}
+					>
+						Go to End
+					</Button>
+					<Button
+						variant="outline"
+						size="sm"
+						class="w-full"
+						onclick={scrollToRealTime}
+					>
+						Scroll to Real Time
+					</Button>
+				</div>
+			</CardContent>
+		</Card>
 
 		<!-- Zoom Controls -->
-		<div class="bg-white rounded-lg shadow p-6">
-			<h3 class="text-lg font-semibold text-gray-800 mb-4">Zoom Controls</h3>
-			<div class="space-y-2">
-				<button
-					class="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={() => zoomTo(0.5)}
-				>
-					Zoom In (2x)
-				</button>
-				<button
-					class="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={() => zoomTo(2)}
-				>
-					Zoom Out (0.5x)
-				</button>
-				<button
-					class="w-full bg-teal-500 hover:bg-teal-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={fitContent}
-				>
-					Fit All Content
-				</button>
-				<button
-					class="w-full bg-gray-500 hover:bg-gray-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={resetTimeScale}
-				>
-					Reset Time Scale
-				</button>
-			</div>
-		</div>
+		<Card>
+			<CardHeader>
+				<CardTitle>Zoom Controls</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<div class="space-y-2">
+					<Button
+						variant="default"
+						size="sm"
+						class="w-full"
+						onclick={() => zoomTo(0.5)}
+					>
+						Zoom In (2x)
+					</Button>
+					<Button
+						variant="default"
+						size="sm"
+						class="w-full"
+						onclick={() => zoomTo(2)}
+					>
+						Zoom Out (0.5x)
+					</Button>
+					<Button
+						variant="secondary"
+						size="sm"
+						class="w-full"
+						onclick={fitContent}
+					>
+						Fit All Content
+					</Button>
+					<Button
+						variant="outline"
+						size="sm"
+						class="w-full"
+						onclick={resetTimeScale}
+					>
+						Reset Time Scale
+					</Button>
+				</div>
+			</CardContent>
+		</Card>
 	</div>
 
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 		<!-- Time Range Controls -->
-		<div class="bg-white rounded-lg shadow p-6">
-			<h3 class="text-lg font-semibold text-gray-800 mb-4">Visible Time Range</h3>
-			<div class="grid grid-cols-2 gap-2">
-				<button
-					class="bg-cyan-500 hover:bg-cyan-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={() => setVisibleTimeRange(7)}
-				>
-					Last 7 Days
-				</button>
-				<button
-					class="bg-cyan-500 hover:bg-cyan-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={() => setVisibleTimeRange(30)}
-				>
-					Last 30 Days
-				</button>
-				<button
-					class="bg-cyan-500 hover:bg-cyan-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={() => setVisibleTimeRange(60)}
-				>
-					Last 60 Days
-				</button>
-				<button
-					class="bg-cyan-500 hover:bg-cyan-600 text-white text-sm py-2 px-3 rounded transition-colors"
-					on:click={() => setVisibleTimeRange(90)}
-				>
-					Last 90 Days
-				</button>
-			</div>
-		</div>
+		<Card>
+			<CardHeader>
+				<CardTitle>Visible Time Range</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<div class="grid grid-cols-2 gap-2">
+					<Button
+						variant="secondary"
+						size="sm"
+						onclick={() => setVisibleTimeRange(7)}
+					>
+						Last 7 Days
+					</Button>
+					<Button
+						variant="secondary"
+						size="sm"
+						onclick={() => setVisibleTimeRange(30)}
+					>
+						Last 30 Days
+					</Button>
+					<Button
+						variant="secondary"
+						size="sm"
+						onclick={() => setVisibleTimeRange(60)}
+					>
+						Last 60 Days
+					</Button>
+					<Button
+						variant="secondary"
+						size="sm"
+						onclick={() => setVisibleTimeRange(90)}
+					>
+						Last 90 Days
+					</Button>
+				</div>
+			</CardContent>
+		</Card>
 
 		<!-- Time Scale Info -->
-		<div class="bg-gray-50 rounded-lg p-6">
-			<h3 class="text-lg font-semibold text-gray-800 mb-4">Time Scale Info</h3>
-			<div class="space-y-2 text-sm">
-				<div class="flex justify-between">
-					<span class="text-gray-600">Data Points:</span>
-					<span class="font-mono">{priceData.length}</span>
+		<Card>
+			<CardHeader>
+				<CardTitle>Time Scale Info</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<div class="space-y-2 text-sm">
+					<div class="flex justify-between">
+						<span class="text-muted-foreground">Data Points:</span>
+						<span class="font-mono">{priceData.length}</span>
+					</div>
+					<div class="flex justify-between">
+						<span class="text-muted-foreground">Bar Spacing:</span>
+						<span class="font-mono">{barSpacing}px</span>
+					</div>
+					<div class="flex justify-between">
+						<span class="text-muted-foreground">Right Offset:</span>
+						<span class="font-mono">{rightOffset}</span>
+					</div>
+					<div class="flex justify-between">
+						<span class="text-muted-foreground">Time Visible:</span>
+						<span class="font-mono">{timeVisible ? 'Yes' : 'No'}</span>
+					</div>
 				</div>
-				<div class="flex justify-between">
-					<span class="text-gray-600">Bar Spacing:</span>
-					<span class="font-mono">{barSpacing}px</span>
-				</div>
-				<div class="flex justify-between">
-					<span class="text-gray-600">Right Offset:</span>
-					<span class="font-mono">{rightOffset}</span>
-				</div>
-				<div class="flex justify-between">
-					<span class="text-gray-600">Time Visible:</span>
-					<span class="font-mono">{timeVisible ? 'Yes' : 'No'}</span>
-				</div>
-			</div>
-		</div>
+			</CardContent>
+		</Card>
 	</div>
 
-	<div class="bg-green-50 border border-green-200 rounded-lg p-4">
-		<h3 class="font-medium text-green-800 mb-2">About Time Scale</h3>
-		<ul class="text-sm text-green-700 space-y-1">
-			<li>• <strong>Bar Spacing:</strong> Controls horizontal spacing between data points</li>
-			<li>• <strong>Right Offset:</strong> Adds margin on the right side for future data</li>
-			<li>• <strong>Visible Range:</strong> Can be set by time values or logical indices</li>
-			<li>• <strong>Navigation:</strong> Programmatically scroll to different chart positions</li>
-			<li>• <strong>Zoom:</strong> Dynamically adjust the visible data range</li>
-			<li>• <strong>Real Time:</strong> Scroll to the latest data point automatically</li>
-			<li>• <strong>Fit Content:</strong> Automatically adjust to show all data</li>
-		</ul>
-	</div>
+	<Alert>
+		<AlertDescription>
+			<h3 class="font-medium mb-2">About Time Scale</h3>
+			<ul class="text-sm space-y-1">
+				<li>• <strong>Bar Spacing:</strong> Controls horizontal spacing between data points</li>
+				<li>• <strong>Right Offset:</strong> Adds margin on the right side for future data</li>
+				<li>• <strong>Visible Range:</strong> Can be set by time values or logical indices</li>
+				<li>• <strong>Navigation:</strong> Programmatically scroll to different chart positions</li>
+				<li>• <strong>Zoom:</strong> Dynamically adjust the visible data range</li>
+				<li>• <strong>Real Time:</strong> Scroll to the latest data point automatically</li>
+				<li>• <strong>Fit Content:</strong> Automatically adjust to show all data</li>
+			</ul>
+		</AlertDescription>
+	</Alert>
 </div>

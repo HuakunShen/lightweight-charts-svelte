@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { Chart, BarSeries, ColorType, type BarData, type UTCTimestamp } from '../../lib/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
 
 	// Chart options
 	const chartOptions = {
@@ -39,13 +42,15 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="text-3xl font-bold text-gray-800 mb-2">Bar Chart Example</h1>
-	<p class="text-gray-600 mb-6">
-		Bar charts display OHLC (Open, High, Low, Close) data as vertical bars. 
-		Each bar shows the price range and direction for a given time period.
-	</p>
-
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+	<Card class="mb-6">
+		<CardHeader>
+			<CardTitle class="text-3xl">Bar Chart Example</CardTitle>
+			<CardDescription>
+				Bar charts display OHLC (Open, High, Low, Close) data as vertical bars. 
+				Each bar shows the price range and direction for a given time period.
+			</CardDescription>
+		</CardHeader>
+		<CardContent>
 		<Chart 
 			bind:this={chart} 
 			width={900} 
@@ -61,31 +66,30 @@
 			/>
 		</Chart>
 
-		<div class="flex flex-wrap gap-2">
-			<button
-				class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-				on:click={() => chart?.timeScale()?.fitContent()}
-			>
-				Fit Content
-			</button>
-			<button
-				class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition-colors"
-				on:click={() => chart?.timeScale()?.scrollToRealTime()}
-			>
-				Scroll to Latest
-			</button>
-		</div>
-	</div>
+			<div class="flex flex-wrap gap-2">
+				<Button onclick={() => chart?.timeScale()?.fitContent()}>
+					Fit Content
+				</Button>
+				<Button variant="secondary" onclick={() => chart?.timeScale()?.scrollToRealTime()}>
+					Scroll to Latest
+				</Button>
+			</div>
+		</CardContent>
+	</Card>
 
-	<div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-		<h3 class="font-medium text-blue-800 mb-2">About Bar Charts</h3>
-		<ul class="text-sm text-blue-700 space-y-1">
-			<li>• Each bar represents OHLC data for a time period</li>
-			<li>• Green bars indicate closing price higher than opening price</li>
-			<li>• Red bars indicate closing price lower than opening price</li>
-			<li>• The vertical line shows the high-low range</li>
-			<li>• Horizontal marks on the left show the opening price</li>
-			<li>• Horizontal marks on the right show the closing price</li>
-		</ul>
-	</div>
+	<Alert>
+		<AlertDescription>
+			<div class="space-y-2">
+				<h3 class="font-medium mb-2">About Bar Charts</h3>
+				<ul class="text-sm space-y-1">
+					<li>• Each bar represents OHLC data for a time period</li>
+					<li>• Green bars indicate closing price higher than opening price</li>
+					<li>• Red bars indicate closing price lower than opening price</li>
+					<li>• The vertical line shows the high-low range</li>
+					<li>• Horizontal marks on the left show the opening price</li>
+					<li>• Horizontal marks on the right show the closing price</li>
+				</ul>
+			</div>
+		</AlertDescription>
+	</Alert>
 </div>

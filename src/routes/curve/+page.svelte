@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { Chart, LineSeries, ColorType, type UTCTimestamp } from '../../lib/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
 
 	// Chart options for yield curve
 	const chartOptions = {
@@ -34,13 +37,15 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="text-3xl font-bold text-gray-800 mb-2">Yield Curve Chart Example</h1>
-	<p class="text-gray-600 mb-6">
-		Yield curve charts show the relationship between interest rates and different time periods.
-		This example demonstrates a special chart type for financial yield curve visualization.
-	</p>
-
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+	<Card class="mb-6">
+		<CardHeader>
+			<CardTitle class="text-3xl">Yield Curve Chart Example</CardTitle>
+			<CardDescription>
+				Yield curve charts show the relationship between interest rates and different time periods.
+				This example demonstrates a special chart type for financial yield curve visualization.
+			</CardDescription>
+		</CardHeader>
+		<CardContent>
 		<Chart
 			bind:this={chart}
 			width={900}
@@ -52,31 +57,30 @@
 			<LineSeries data={curveData} color="#2962FF" title="Yield Curve" />
 		</Chart>
 
-		<div class="flex flex-wrap gap-2">
-			<button
-				class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-				on:click={() => chart?.timeScale()?.fitContent()}
-			>
-				Fit Content
-			</button>
-			<button
-				class="bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded transition-colors"
-				on:click={() => chart?.priceScale()?.applyOptions({ autoScale: true })}
-			>
-				Auto Scale
-			</button>
-		</div>
-	</div>
+			<div class="flex flex-wrap gap-2">
+				<Button onclick={() => chart?.timeScale()?.fitContent()}>
+					Fit Content
+				</Button>
+				<Button variant="secondary" onclick={() => chart?.priceScale()?.applyOptions({ autoScale: true })}>
+					Auto Scale
+				</Button>
+			</div>
+		</CardContent>
+	</Card>
 
-	<div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-		<h3 class="font-medium text-purple-800 mb-2">About Yield Curves</h3>
-		<ul class="text-sm text-purple-700 space-y-1">
-			<li>• Shows interest rates across different maturity periods</li>
-			<li>• X-axis represents time to maturity (months)</li>
-			<li>• Y-axis represents yield/interest rate percentage</li>
-			<li>• Normal curve slopes upward (longer terms = higher yields)</li>
-			<li>• Inverted curves can signal economic conditions</li>
-			<li>• Uses specialized chart configuration for yield data</li>
-		</ul>
-	</div>
+	<Alert>
+		<AlertDescription>
+			<div class="space-y-2">
+				<h3 class="font-medium mb-2">About Yield Curves</h3>
+				<ul class="text-sm space-y-1">
+					<li>• Shows interest rates across different maturity periods</li>
+					<li>• X-axis represents time to maturity (months)</li>
+					<li>• Y-axis represents yield/interest rate percentage</li>
+					<li>• Normal curve slopes upward (longer terms = higher yields)</li>
+					<li>• Inverted curves can signal economic conditions</li>
+					<li>• Uses specialized chart configuration for yield data</li>
+				</ul>
+			</div>
+		</AlertDescription>
+	</Alert>
 </div>

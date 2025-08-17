@@ -18,7 +18,6 @@
 		SidebarProvider,
 		SidebarTrigger
 	} from '$lib/components/ui/sidebar/index.js';
-	import { Button } from '$lib/components/ui/button/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import ThemeToggle from '$lib/components/theme-toggle.svelte';
 
@@ -64,11 +63,13 @@
 					<SidebarMenu>
 						{#each navigation as item}
 							<SidebarMenuItem>
-								<SidebarMenuButton asChild>
-									<a href={item.href} class={page.url.pathname === item.href ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''}>
-										<span class="mr-2">{item.icon}</span>
-										{item.label}
-									</a>
+								<SidebarMenuButton isActive={page.url.pathname === item.href}>
+									{#snippet child({ props })}
+										<a href={item.href} {...props}>
+											<span>{item.icon}</span>
+											<span>{item.label}</span>
+										</a>
+									{/snippet}
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						{/each}
@@ -78,12 +79,17 @@
 		</SidebarContent>
 
 		<SidebarFooter>
+			<SidebarMenu>
+				<SidebarMenuItem>
+					<ThemeToggle />
+				</SidebarMenuItem>
+			</SidebarMenu>
 			<div class="px-2 py-2">
 				<div class="text-xs text-muted-foreground">
 					<div class="mb-1">Built with Svelte 5</div>
 					<div>
-						<a 
-							href="https://tradingview.github.io/lightweight-charts/" 
+						<a
+							href="https://tradingview.github.io/lightweight-charts/"
 							class="text-blue-600 hover:text-blue-700"
 							target="_blank"
 							rel="noopener noreferrer"
@@ -103,7 +109,8 @@
 				<div class="h-4 w-px bg-sidebar-border"></div>
 				<div class="flex items-center space-x-2">
 					<h1 class="text-lg font-semibold">
-						{navigation.find(item => item.href === page.url.pathname)?.label || 'Svelte Lightweight Charts'}
+						{navigation.find((item) => item.href === page.url.pathname)?.label ||
+							'Svelte Lightweight Charts'}
 					</h1>
 				</div>
 			</div>

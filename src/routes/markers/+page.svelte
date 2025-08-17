@@ -12,6 +12,9 @@
 		type ISeriesMarkersPluginApi,
 		type Time
 	} from 'lightweight-charts';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
 
 	// Chart options
 	const chartOptions = {
@@ -285,8 +288,8 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
-	<h1 class="mb-2 text-3xl font-bold text-gray-800">Series Markers Example</h1>
-	<p class="mb-6 text-gray-600">
+	<h1 class="mb-2 text-3xl font-bold">Series Markers Example</h1>
+	<p class="mb-6">
 		Interactive markers that display buy/sell signals and important events on the chart. Test marker
 		performance by adding bulk markers of different types. Currently showing <strong
 			>{totalMarkersAdded}</strong
@@ -294,14 +297,15 @@
 		markers on <strong>{data.length}</strong> data points.
 	</p>
 
-	<div class="mb-6 rounded-lg bg-white p-6 shadow-lg">
-		<Chart
-			bind:this={chart}
-			width={900}
-			height={500}
-			options={chartOptions}
-			class="mb-4 rounded border border-gray-200"
-		>
+	<Card class="mb-6">
+		<CardContent class="p-6">
+			<Chart
+				bind:this={chart}
+				width={900}
+				height={500}
+				options={chartOptions}
+				class="mb-4 rounded border border-gray-200"
+			>
 			<CandlestickSeries
 				bind:this={candlestickSeries}
 				{data}
@@ -313,107 +317,116 @@
 				wickDownColor="#ef5350"
 				title="OHLC with Markers"
 			/>
-		</Chart>
+			</Chart>
 
-		<div class="space-y-4">
-			<!-- Chart Controls -->
-			<div class="flex flex-wrap gap-2">
-				<button
-					class="rounded bg-blue-500 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-600"
-					onclick={() => chart?.timeScale()?.fitContent()}
-				>
-					Fit Content
-				</button>
-				<button
-					class="rounded bg-gray-500 px-4 py-2 font-medium text-white transition-colors hover:bg-gray-600"
-					onclick={() => chart?.timeScale()?.scrollToRealTime()}
-				>
-					Scroll to Latest
-				</button>
-				<button
-					class="rounded bg-green-500 px-4 py-2 font-medium text-white transition-colors hover:bg-green-600"
-					onclick={addCustomMarker}
-				>
-					Add Custom Marker
-				</button>
-				<button
-					class="rounded bg-orange-500 px-4 py-2 font-medium text-white transition-colors hover:bg-orange-600"
-					onclick={resetMarkers}
-				>
-					Reset to Demo
-				</button>
-				<button
-					class="rounded bg-red-500 px-4 py-2 font-medium text-white transition-colors hover:bg-red-600"
-					onclick={clearMarkers}
-				>
-					Clear All Markers
-				</button>
-			</div>
-
-			<!-- Bulk Marker Controls -->
-			<div class="rounded-lg bg-gray-50 p-4">
-				<h3 class="mb-3 font-medium text-gray-800">
-					Performance Testing - Add 200 Markers Per Click
-				</h3>
+			<div class="space-y-4">
+				<!-- Chart Controls -->
 				<div class="flex flex-wrap gap-2">
-					{#each markerTypes as markerType, index}
-						<button
-							class="rounded px-4 py-2 font-medium text-white transition-colors"
-							style="background-color: {markerType.color}; hover:filter: brightness(0.9)"
-							onclick={() => addBulkMarkers(index)}
-						>
-							Add {markerType.name}
-						</button>
-					{/each}
+					<Button
+						variant="default"
+						onclick={() => chart?.timeScale()?.fitContent()}
+					>
+						Fit Content
+					</Button>
+					<Button
+						variant="secondary"
+						onclick={() => chart?.timeScale()?.scrollToRealTime()}
+					>
+						Scroll to Latest
+					</Button>
+					<Button
+						variant="outline"
+						onclick={addCustomMarker}
+					>
+						Add Custom Marker
+					</Button>
+					<Button
+						variant="outline"
+						onclick={resetMarkers}
+					>
+						Reset to Demo
+					</Button>
+					<Button
+						variant="destructive"
+						onclick={clearMarkers}
+					>
+						Clear All Markers
+					</Button>
 				</div>
-				<p class="mt-2 text-sm text-gray-600">
-					Each button adds 200 random markers of that type. Watch performance as you add thousands
-					of markers!
-				</p>
+
+				<!-- Bulk Marker Controls -->
+				<Card>
+					<CardHeader>
+						<CardTitle>Performance Testing - Add 200 Markers Per Click</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div class="flex flex-wrap gap-2 mb-3">
+							{#each markerTypes as markerType, index}
+								<Button
+									variant="outline"
+									style="background-color: {markerType.color}; color: white; border-color: {markerType.color}"
+									onclick={() => addBulkMarkers(index)}
+								>
+									Add {markerType.name}
+								</Button>
+							{/each}
+						</div>
+						<p class="text-sm text-muted-foreground">
+							Each button adds 200 random markers of that type. Watch performance as you add thousands
+							of markers!
+						</p>
+					</CardContent>
+				</Card>
 			</div>
-		</div>
-	</div>
+		</CardContent>
+	</Card>
 
 	<div class="grid gap-6 md:grid-cols-3">
-		<div class="rounded-lg border border-blue-200 bg-blue-50 p-4">
-			<h3 class="mb-2 font-medium text-blue-800">Marker Types</h3>
-			<ul class="space-y-1 text-sm text-blue-700">
-				<li>
-					• <span class="mr-1 inline-block h-3 w-3 rounded-full bg-blue-500"></span> Circle markers for
-					events
-				</li>
-				<li>
-					• <span
-						class="mr-1 inline-block h-0 w-0 border-r-2 border-b-3 border-l-2 border-transparent border-b-blue-500"
-					></span> Arrow up for buy signals
-				</li>
-				<li>
-					• <span
-						class="mr-1 inline-block h-0 w-0 border-t-3 border-r-2 border-l-2 border-transparent border-t-red-500"
-					></span> Arrow down for sell signals
-				</li>
-				<li>• Custom colors and text labels</li>
-			</ul>
-		</div>
+		<Alert>
+			<AlertDescription>
+				<h3 class="mb-2 font-medium">Marker Types</h3>
+				<ul class="space-y-1 text-sm">
+					<li>
+						• <span class="mr-1 inline-block h-3 w-3 rounded-full bg-blue-500"></span> Circle markers for
+						events
+					</li>
+					<li>
+						• <span
+							class="mr-1 inline-block h-0 w-0 border-r-2 border-b-3 border-l-2 border-transparent border-b-blue-500"
+						></span> Arrow up for buy signals
+					</li>
+					<li>
+						• <span
+							class="mr-1 inline-block h-0 w-0 border-t-3 border-r-2 border-l-2 border-transparent border-t-red-500"
+						></span> Arrow down for sell signals
+					</li>
+					<li>• Custom colors and text labels</li>
+				</ul>
+			</AlertDescription>
+		</Alert>
 
-		<div class="rounded-lg border border-green-200 bg-green-50 p-4">
-			<h3 class="mb-2 font-medium text-green-800">Positioning</h3>
-			<ul class="space-y-1 text-sm text-green-700">
-				<li>• <strong>aboveBar:</strong> Marker above the bar</li>
-				<li>• <strong>belowBar:</strong> Marker below the bar</li>
-				<li>• <strong>inBar:</strong> Marker inside the bar</li>
-				<li>• Automatic collision detection</li>
-			</ul>
-		</div>
+		<Alert>
+			<AlertDescription>
+				<h3 class="mb-2 font-medium">Positioning</h3>
+				<ul class="space-y-1 text-sm">
+					<li>• <strong>aboveBar:</strong> Marker above the bar</li>
+					<li>• <strong>belowBar:</strong> Marker below the bar</li>
+					<li>• <strong>inBar:</strong> Marker inside the bar</li>
+					<li>• Automatic collision detection</li>
+				</ul>
+			</AlertDescription>
+		</Alert>
 
-		<div class="rounded-lg border border-purple-200 bg-purple-50 p-4">
-			<h3 class="mb-2 font-medium text-purple-800">Features</h3>
-			<ul class="space-y-1 text-sm text-purple-700">
-				<li>• Dynamic marker creation</li>
-				<li>• Signal detection algorithms</li>
-				<li>• Interactive marker management</li>
-				<li>• Customizable appearance</li>
-			</ul>
-		</div>
+		<Alert>
+			<AlertDescription>
+				<h3 class="mb-2 font-medium">Features</h3>
+				<ul class="space-y-1 text-sm">
+					<li>• Dynamic marker creation</li>
+					<li>• Signal detection algorithms</li>
+					<li>• Interactive marker management</li>
+					<li>• Customizable appearance</li>
+				</ul>
+			</AlertDescription>
+		</Alert>
 	</div>
 </div>
