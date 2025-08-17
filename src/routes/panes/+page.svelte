@@ -44,7 +44,7 @@
 	let chart: Chart;
 
 	// Demo state
-	let currentPanes = 3;
+	let currentPanes = $state(3);
 	let volumeSeriesRef: HistogramSeries;
 	let rsiSeriesRef: LineSeries;
 
