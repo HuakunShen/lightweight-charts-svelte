@@ -69,6 +69,9 @@ export type {
 	MouseEventParams
 } from './types.js';
 
+// Export data generators
+export * from './data-generators.js';
+
 // Export context utilities for advanced usage
 export { getChartContext, getSeriesContext } from './context.js';
 

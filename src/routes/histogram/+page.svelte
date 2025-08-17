@@ -1,27 +1,38 @@
 <script lang="ts">
 	import { Chart, HistogramSeries, type ChartOptions, type DeepPartial, ColorType, type UTCTimestamp } from '../../lib/index.js';
+	import { generateVolumeData } from '../../lib/data-generators.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
 	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
+	import { mode } from 'mode-watcher';
 
-	// Chart options
-	const chartOptions: DeepPartial<ChartOptions> = {
-		layout: { textColor: 'white', background: { type: ColorType.Solid, color: 'black' } }
-	};
+	// Theme-aware chart options
+	const chartOptions: DeepPartial<ChartOptions> = $derived({
+		layout: { 
+			textColor: mode.current === 'dark' ? 'white' : 'black', 
+			background: { 
+				type: ColorType.Solid, 
+				color: mode.current === 'dark' ? '#0a0a0a' : 'white' 
+			} 
+		},
+		grid: {
+			horzLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
+			vertLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
+		},
+		rightPriceScale: {
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
+		},
+		timeScale: {
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
+		},
+	});
 
-	// Histogram series data
-	const histogramData = [
-		{ value: 1, time: 1642425322 as UTCTimestamp },
-		{ value: 8, time: 1642511722 as UTCTimestamp },
-		{ value: 10, time: 1642598122 as UTCTimestamp },
-		{ value: 20, time: 1642684522 as UTCTimestamp },
-		{ value: 3, time: 1642770922 as UTCTimestamp, color: 'red' },
-		{ value: 43, time: 1642857322 as UTCTimestamp },
-		{ value: 41, time: 1642943722 as UTCTimestamp, color: 'red' },
-		{ value: 43, time: 1643030122 as UTCTimestamp },
-		{ value: 56, time: 1643116522 as UTCTimestamp },
-		{ value: 46, time: 1643202922 as UTCTimestamp, color: 'red' }
-	];
+	// Generate histogram series data using library function
+	const histogramData = generateVolumeData({ days: 365, baseVolume: 50000 });
 
 	// Chart reference for manual control
 	let chart: Chart;
@@ -46,7 +57,7 @@
 			width={900} 
 			height={500} 
 			options={chartOptions} 
-			class="border border-gray-200 rounded mb-4"
+			class="border border-border rounded mb-4"
 		>
 			<HistogramSeries 
 				data={histogramData} 

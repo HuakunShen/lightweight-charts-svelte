@@ -12,30 +12,37 @@
 		type ISeriesMarkersPluginApi,
 		type Time
 	} from 'lightweight-charts';
+	import { mode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
 	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
 
-	// Chart options
-	const chartOptions = {
-		layout: { textColor: 'black', background: { type: ColorType.Solid, color: 'white' } },
+	// Theme-aware chart options
+	const chartOptions = $derived({
+		layout: { 
+			textColor: mode.current === 'dark' ? 'white' : 'black', 
+			background: { 
+				type: ColorType.Solid, 
+				color: mode.current === 'dark' ? '#0a0a0a' : 'white' 
+			} 
+		},
 		width: 900,
 		height: 500,
 		rightPriceScale: {
-			borderColor: '#D1D4DC'
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC'
 		},
 		timeScale: {
-			borderColor: '#D1D4DC'
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC'
 		},
 		grid: {
 			horzLines: {
-				color: '#F0F3FA'
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA'
 			},
 			vertLines: {
-				color: '#F0F3FA'
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA'
 			}
 		}
-	};
+	});
 
 	// Generate extensive random candlestick data (1 year of hourly data)
 	function generateRandomData(): CandlestickData[] {

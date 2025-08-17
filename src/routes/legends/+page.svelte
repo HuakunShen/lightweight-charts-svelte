@@ -1,69 +1,42 @@
 <script lang="ts">
 	import { Chart, LineSeries, AreaSeries, ColorType, type LineData, type AreaData, type UTCTimestamp } from '../../lib/index.js';
+	import { generateFibonacciData, generatePowersOf2Data } from '../../lib/data-generators.js';
 	import { onMount } from 'svelte';
+	import { mode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
 	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
 
-	// Chart options
-	const chartOptions = {
-		layout: { textColor: 'black', background: { type: ColorType.Solid, color: 'white' } },
+	// Theme-aware chart options
+	const chartOptions = $derived({
+		layout: { 
+			textColor: mode.current === 'dark' ? 'white' : 'black', 
+			background: { 
+				type: ColorType.Solid, 
+				color: mode.current === 'dark' ? '#0a0a0a' : 'white' 
+			} 
+		},
 		width: 900,
 		height: 500,
 		rightPriceScale: {
-			borderColor: '#D1D4DC',
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
 		},
 		timeScale: {
-			borderColor: '#D1D4DC',
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
 		},
 		grid: {
 			horzLines: {
-				color: '#F0F3FA',
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
 			},
 			vertLines: {
-				color: '#F0F3FA',
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
 			},
 		},
-	};
+	});
 
-	// Sample data for multiple series
-	const lineData: LineData[] = [
-		{ value: 0, time: 1642425600 as UTCTimestamp },
-		{ value: 1, time: 1642512000 as UTCTimestamp },
-		{ value: 2, time: 1642598400 as UTCTimestamp },
-		{ value: 3, time: 1642684800 as UTCTimestamp },
-		{ value: 5, time: 1642771200 as UTCTimestamp },
-		{ value: 8, time: 1642857600 as UTCTimestamp },
-		{ value: 13, time: 1642944000 as UTCTimestamp },
-		{ value: 21, time: 1643030400 as UTCTimestamp },
-		{ value: 34, time: 1643116800 as UTCTimestamp },
-		{ value: 55, time: 1643203200 as UTCTimestamp },
-		{ value: 89, time: 1643289600 as UTCTimestamp },
-		{ value: 144, time: 1643376000 as UTCTimestamp },
-		{ value: 233, time: 1643462400 as UTCTimestamp },
-		{ value: 377, time: 1643548800 as UTCTimestamp },
-		{ value: 610, time: 1643635200 as UTCTimestamp },
-		{ value: 987, time: 1643721600 as UTCTimestamp }
-	];
-
-	const areaData: AreaData[] = [
-		{ value: 2, time: 1642425600 as UTCTimestamp },
-		{ value: 4, time: 1642512000 as UTCTimestamp },
-		{ value: 8, time: 1642598400 as UTCTimestamp },
-		{ value: 16, time: 1642684800 as UTCTimestamp },
-		{ value: 32, time: 1642771200 as UTCTimestamp },
-		{ value: 64, time: 1642857600 as UTCTimestamp },
-		{ value: 128, time: 1642944000 as UTCTimestamp },
-		{ value: 256, time: 1643030400 as UTCTimestamp },
-		{ value: 512, time: 1643116800 as UTCTimestamp },
-		{ value: 1024, time: 1643203200 as UTCTimestamp },
-		{ value: 512, time: 1643289600 as UTCTimestamp },
-		{ value: 256, time: 1643376000 as UTCTimestamp },
-		{ value: 128, time: 1643462400 as UTCTimestamp },
-		{ value: 64, time: 1643548800 as UTCTimestamp },
-		{ value: 32, time: 1643635200 as UTCTimestamp },
-		{ value: 16, time: 1643721600 as UTCTimestamp }
-	];
+	// Generate data using library functions
+	const lineData: LineData[] = generateFibonacciData({ count: 50, interval: 86400 });
+	const areaData: AreaData[] = generatePowersOf2Data({ count: 30, interval: 86400 });
 
 	// Chart reference
 	let chart: Chart;
@@ -124,7 +97,7 @@
 				<!-- Legend container positioned over the chart -->
 				<div 
 					bind:this={legendElement}
-					class="absolute top-4 left-4 z-10 bg-white bg-opacity-90 px-3 py-2 rounded shadow-sm border text-sm font-medium"
+					class="absolute top-4 left-4 z-10 bg-background/90 backdrop-blur-sm px-3 py-2 rounded shadow-sm border text-sm font-medium"
 				>
 					Fibonacci: <strong>--</strong> | Powers of 2: <strong>--</strong>
 				</div>

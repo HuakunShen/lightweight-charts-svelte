@@ -3,14 +3,35 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
 	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
+	import { mode } from 'mode-watcher';
 
-	// Chart options for yield curve
-	const chartOptions = {
-		layout: { textColor: 'white', background: { type: ColorType.Solid, color: 'black' } },
+	// Theme-aware chart options for yield curve
+	const chartOptions = $derived({
+		layout: { 
+			textColor: mode.current === 'dark' ? 'white' : 'black', 
+			background: { 
+				type: ColorType.Solid, 
+				color: mode.current === 'dark' ? '#0a0a0a' : 'white' 
+			} 
+		},
+		grid: {
+			horzLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
+			vertLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
+		},
+		rightPriceScale: {
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
+		},
+		timeScale: {
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
+		},
 		yieldCurve: { baseResolution: 1, minimumTimeRange: 10, startTimeRange: 3 },
 		handleScroll: false,
 		handleScale: false
-	};
+	});
 
 	// Yield curve data
 	const curveData = [
@@ -52,7 +73,7 @@
 			height={500}
 			options={chartOptions}
 			yieldCurve={true}
-			class="border border-gray-200 rounded mb-4"
+			class="border border-border rounded mb-4"
 		>
 			<LineSeries data={curveData} color="#2962FF" title="Yield Curve" />
 		</Chart>

@@ -1,24 +1,40 @@
 <script lang="ts">
 	import { Chart, LineSeries, AreaSeries, HistogramSeries, ColorType, type UTCTimestamp, type LineData, type AreaData, type HistogramData } from '../../lib/index.js';
+	import { generateLineData, generateVolumeData, generateRSIData } from '../../lib/data-generators.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
 	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
 	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
+	import { mode } from 'mode-watcher';
 
-	// Chart options
-	const chartOptions = {
+	// Theme-aware chart options
+	const chartOptions = $derived({
 		layout: { 
-			textColor: 'white', 
-			background: { type: ColorType.Solid, color: 'black' } 
+			textColor: mode.current === 'dark' ? 'white' : 'black', 
+			background: { 
+				type: ColorType.Solid, 
+				color: mode.current === 'dark' ? '#0a0a0a' : 'white' 
+			} 
+		},
+		grid: {
+			horzLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
+			vertLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
 		},
 		leftPriceScale: {
 			visible: true,
-			borderColor: '#485c7b'
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC'
 		},
 		rightPriceScale: {
 			visible: true,
-			borderColor: '#485c7b'
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC'
+		},
+		timeScale: {
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
 		},
 		overlayPriceScales: {
 			scaleMargins: {
@@ -26,49 +42,14 @@
 				bottom: 0.1,
 			}
 		}
-	};
+	});
 
-	// Price data for main series (right scale)
-	const priceData: LineData[] = [
-		{ time: 1642427876 as UTCTimestamp, value: 100 },
-		{ time: 1642514276 as UTCTimestamp, value: 103 },
-		{ time: 1642600676 as UTCTimestamp, value: 107 },
-		{ time: 1642687076 as UTCTimestamp, value: 108 },
-		{ time: 1642773476 as UTCTimestamp, value: 115 },
-		{ time: 1642859876 as UTCTimestamp, value: 117 },
-		{ time: 1642946276 as UTCTimestamp, value: 122 },
-		{ time: 1643032676 as UTCTimestamp, value: 124 },
-		{ time: 1643119076 as UTCTimestamp, value: 128 },
-		{ time: 1643205476 as UTCTimestamp, value: 131 }
-	];
-
-	// Volume data for left scale
-	const volumeData: HistogramData[] = [
-		{ time: 1642427876 as UTCTimestamp, value: 500000, color: '#26a69a' },
-		{ time: 1642514276 as UTCTimestamp, value: 750000, color: '#26a69a' },
-		{ time: 1642600676 as UTCTimestamp, value: 420000, color: '#ef5350' },
-		{ time: 1642687076 as UTCTimestamp, value: 680000, color: '#26a69a' },
-		{ time: 1642773476 as UTCTimestamp, value: 890000, color: '#26a69a' },
-		{ time: 1642859876 as UTCTimestamp, value: 550000, color: '#26a69a' },
-		{ time: 1642946276 as UTCTimestamp, value: 930000, color: '#26a69a' },
-		{ time: 1643032676 as UTCTimestamp, value: 710000, color: '#ef5350' },
-		{ time: 1643119076 as UTCTimestamp, value: 840000, color: '#26a69a' },
-		{ time: 1643205476 as UTCTimestamp, value: 670000, color: '#26a69a' }
-	];
-
-	// RSI data for overlay scale
-	const rsiData: AreaData[] = [
-		{ time: 1642427876 as UTCTimestamp, value: 55 },
-		{ time: 1642514276 as UTCTimestamp, value: 62 },
-		{ time: 1642600676 as UTCTimestamp, value: 48 },
-		{ time: 1642687076 as UTCTimestamp, value: 71 },
-		{ time: 1642773476 as UTCTimestamp, value: 78 },
-		{ time: 1642859876 as UTCTimestamp, value: 65 },
-		{ time: 1642946276 as UTCTimestamp, value: 82 },
-		{ time: 1643032676 as UTCTimestamp, value: 73 },
-		{ time: 1643119076 as UTCTimestamp, value: 85 },
-		{ time: 1643205476 as UTCTimestamp, value: 79 }
-	];
+	// Generate data using library functions
+	const priceData: LineData[] = generateLineData({ days: 365, startPrice: 100 });
+	const volumeData: HistogramData[] = generateVolumeData({ days: 365, baseVolume: 750000 });
+	const rsiDataGenerated = generateRSIData({ days: 365 });
+	// Convert RSI data to AreaData format
+	const rsiData: AreaData[] = rsiDataGenerated.map(item => ({ time: item.time, value: item.value }));
 
 	// Chart reference
 	let chart: Chart;
@@ -171,7 +152,7 @@
 				width={900} 
 				height={500} 
 				options={chartOptions} 
-				class="border border-gray-200 rounded mb-4"
+				class="border border-border rounded mb-4"
 			>
 			<!-- Price series on right scale -->
 			<LineSeries 

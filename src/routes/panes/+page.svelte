@@ -1,62 +1,44 @@
 <script lang="ts">
 	import { Chart, CandlestickSeries, HistogramSeries, LineSeries, ColorType, type UTCTimestamp, type CandlestickData, type HistogramData, type LineData } from '../../lib/index.js';
+	import { generateOHLCData, generateVolumeData, generateRSIData } from '../../lib/data-generators.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
 	import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
+	import { mode } from 'mode-watcher';
 
-	// Chart options
-	const chartOptions = {
+	// Theme-aware chart options
+	const chartOptions = $derived({
 		layout: { 
-			textColor: 'white', 
-			background: { type: ColorType.Solid, color: 'black' },
+			textColor: mode.current === 'dark' ? 'white' : 'black', 
+			background: { 
+				type: ColorType.Solid, 
+				color: mode.current === 'dark' ? '#0a0a0a' : 'white' 
+			},
 			panes: {
-				separatorColor: '#2962FF',
-				separatorHoverColor: '#1976D2'
+				separatorColor: mode.current === 'dark' ? '#2962FF' : '#1976D2',
+				separatorHoverColor: mode.current === 'dark' ? '#1976D2' : '#2962FF'
 			}
-		}
-	};
+		},
+		grid: {
+			horzLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
+			vertLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
+		},
+		rightPriceScale: {
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
+		},
+		timeScale: {
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
+		},
+	});
 
-	// Price data for main pane (pane 0)
-	const priceData: CandlestickData[] = [
-		{ time: 1642427876 as UTCTimestamp, open: 100, high: 108, low: 96, close: 103 },
-		{ time: 1642514276 as UTCTimestamp, open: 103, high: 110, low: 98, close: 107 },
-		{ time: 1642600676 as UTCTimestamp, open: 107, high: 112, low: 105, close: 108 },
-		{ time: 1642687076 as UTCTimestamp, open: 108, high: 115, low: 103, close: 112 },
-		{ time: 1642773476 as UTCTimestamp, open: 112, high: 118, low: 109, close: 115 },
-		{ time: 1642859876 as UTCTimestamp, open: 115, high: 120, low: 112, close: 117 },
-		{ time: 1642946276 as UTCTimestamp, open: 117, high: 125, low: 115, close: 122 },
-		{ time: 1643032676 as UTCTimestamp, open: 122, high: 127, low: 119, close: 124 },
-		{ time: 1643119076 as UTCTimestamp, open: 124, high: 130, low: 121, close: 128 },
-		{ time: 1643205476 as UTCTimestamp, open: 128, high: 133, low: 125, close: 131 }
-	];
-
-	// Volume data for second pane (pane 1)
-	const volumeData: HistogramData[] = [
-		{ time: 1642427876 as UTCTimestamp, value: 50000, color: '#26a69a' },
-		{ time: 1642514276 as UTCTimestamp, value: 75000, color: '#26a69a' },
-		{ time: 1642600676 as UTCTimestamp, value: 42000, color: '#ef5350' },
-		{ time: 1642687076 as UTCTimestamp, value: 68000, color: '#26a69a' },
-		{ time: 1642773476 as UTCTimestamp, value: 89000, color: '#26a69a' },
-		{ time: 1642859876 as UTCTimestamp, value: 55000, color: '#26a69a' },
-		{ time: 1642946276 as UTCTimestamp, value: 93000, color: '#26a69a' },
-		{ time: 1643032676 as UTCTimestamp, value: 71000, color: '#26a69a' },
-		{ time: 1643119076 as UTCTimestamp, value: 84000, color: '#26a69a' },
-		{ time: 1643205476 as UTCTimestamp, value: 67000, color: '#26a69a' }
-	];
-
-	// RSI data for third pane (pane 2)
-	const rsiData: LineData[] = [
-		{ time: 1642427876 as UTCTimestamp, value: 55 },
-		{ time: 1642514276 as UTCTimestamp, value: 62 },
-		{ time: 1642600676 as UTCTimestamp, value: 48 },
-		{ time: 1642687076 as UTCTimestamp, value: 71 },
-		{ time: 1642773476 as UTCTimestamp, value: 78 },
-		{ time: 1642859876 as UTCTimestamp, value: 65 },
-		{ time: 1642946276 as UTCTimestamp, value: 82 },
-		{ time: 1643032676 as UTCTimestamp, value: 73 },
-		{ time: 1643119076 as UTCTimestamp, value: 85 },
-		{ time: 1643205476 as UTCTimestamp, value: 79 }
-	];
+	// Generate data using library functions
+	const priceData: CandlestickData[] = generateOHLCData({ days: 365, startPrice: 100 });
+	const volumeData: HistogramData[] = generateVolumeData({ days: 365, baseVolume: 75000 });
+	const rsiData: LineData[] = generateRSIData({ days: 365 });
 
 	// Chart reference for manual control
 	let chart: Chart;
@@ -119,7 +101,7 @@
 				width={900} 
 				height={600} 
 				options={chartOptions} 
-				class="border border-gray-200 rounded"
+				class="border border-border rounded"
 			>
 			<!-- Main price chart in pane 0 -->
 			<CandlestickSeries 

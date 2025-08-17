@@ -1,17 +1,33 @@
 <script lang="ts">
 	import { Chart, CandlestickSeries, HistogramSeries, LineSeries, ColorType, type UTCTimestamp, type CandlestickData, type HistogramData, type LineData } from '../../lib/index.js';
+	import { generateOHLCData, generateVolumeData, generateMovingAverageData } from '../../lib/data-generators.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
 import { Alert, AlertDescription } from '$lib/components/ui/alert/index.js';
 import { Label } from '$lib/components/ui/label/index.js';
 import { Checkbox } from '$lib/components/ui/checkbox/index.js';
+import { mode } from 'mode-watcher';
 
 
-	// Chart options with time scale configuration
-	const chartOptions = {
+	// Theme-aware chart options with time scale configuration
+	const chartOptions = $derived({
 		layout: { 
-			textColor: 'white', 
-			background: { type: ColorType.Solid, color: 'black' } 
+			textColor: mode.current === 'dark' ? 'white' : 'black', 
+			background: { 
+				type: ColorType.Solid, 
+				color: mode.current === 'dark' ? '#0a0a0a' : 'white' 
+			} 
+		},
+		grid: {
+			horzLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
+			vertLines: {
+				color: mode.current === 'dark' ? '#1f2937' : '#F0F3FA',
+			},
+		},
+		rightPriceScale: {
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
 		},
 		timeScale: {
 			rightOffset: 12,
@@ -20,70 +36,19 @@ import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 			lockVisibleTimeRangeOnResize: true,
 			rightBarStaysOnScroll: true,
 			borderVisible: true,
-			borderColor: '#485c7b',
+			borderColor: mode.current === 'dark' ? '#374151' : '#D1D4DC',
 			visible: true,
 			timeVisible: true,
 			secondsVisible: false
 		}
-	};
+	});
 
-	// Generate extended price data for time scale demonstration
-	const generatePriceData = (): CandlestickData[] => {
-		const data: CandlestickData[] = [];
-		let price = 100;
-		const startTime = 1640995200; // Jan 1, 2022
-		
-		for (let i = 0; i < 100; i++) {
-			const change = (Math.random() - 0.5) * 4;
-			const open = price;
-			const close = price + change;
-			const high = Math.max(open, close) + Math.random() * 2;
-			const low = Math.min(open, close) - Math.random() * 2;
-			
-			data.push({
-				time: (startTime + i * 86400) as UTCTimestamp, // Daily data
-				open,
-				high,
-				low,
-				close
-			});
-			
-			price = close;
-		}
-		
-		return data;
-	};
-
-	// Generate volume data
-	const generateVolumeData = (): HistogramData[] => {
-		return generatePriceData().map((item, index) => ({
-			time: item.time,
-			value: Math.floor(Math.random() * 100000) + 20000,
-			color: index % 2 === 0 ? '#26a69a' : '#ef5350'
-		}));
-	};
-
-	// Generate moving average data
-	const generateMovingAverage = (priceData: CandlestickData[], period: number): LineData[] => {
-		const ma: LineData[] = [];
-		
-		for (let i = period - 1; i < priceData.length; i++) {
-			let sum = 0;
-			for (let j = 0; j < period; j++) {
-				sum += priceData[i - j].close;
-			}
-			ma.push({
-				time: priceData[i].time,
-				value: sum / period
-			});
-		}
-		
-		return ma;
-	};
-
-	const priceData = generatePriceData();
-	const volumeData = generateVolumeData();
-	const ma20Data = generateMovingAverage(priceData, 20);
+	// Generate data using library functions
+	const priceData = generateOHLCData({ days: 365, startPrice: 100 });
+	const volumeData = generateVolumeData({ days: 365, baseVolume: 50000 });
+	// Convert OHLC data to LineData for moving average calculation
+	const priceLineData: LineData[] = priceData.map(item => ({ time: item.time, value: item.close }));
+	const ma20Data = generateMovingAverageData(priceLineData, 20);
 
 	// Chart reference
 	let chart: Chart;
@@ -243,7 +208,7 @@ import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 				width={900} 
 				height={600} 
 				options={chartOptions} 
-				class="border border-gray-200 rounded mb-4"
+				class="border border-border rounded mb-4"
 			>
 			<!-- Price data in main pane -->
 			<CandlestickSeries 
