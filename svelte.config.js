@@ -1,6 +1,6 @@
 import { mdsvex } from 'mdsvex';
-import adapter from '@sveltejs/adapter-static';
-// import adapter from '@sveltejs/adapter-auto';
+// import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-auto';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -12,13 +12,17 @@ const config = {
 		adapter: adapter({
 			// default options are shown. On some platforms
 			// these options are set automatically — see below
-			pages: 'build',
-			assets: 'build',
-			fallback: undefined,
-			precompress: false,
-			strict: true
+			// pages: 'build',
+			// assets: 'build',
+			// fallback: undefined,
+			// precompress: false,
+			// strict: true
 		}),
 		// adapter: adapter(),
+		paths: {
+			base: '/svelte-lightweight-charts'
+			// base: process.env.NODE_ENV === 'production' ? '/svelte-lightweight-charts' : ''
+		},
 		alias: {
 			$lib: 'src/lib'
 		}

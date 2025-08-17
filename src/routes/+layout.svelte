@@ -2,6 +2,7 @@
 	import { ModeWatcher } from 'mode-watcher';
 	import '../app.css';
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import {
 		Sidebar,
@@ -24,15 +25,15 @@
 	let { children } = $props();
 
 	const navigation = [
-		{ href: '/', label: 'Home', icon: '🏠' },
-		{ href: '/bar', label: 'Bar Chart', icon: '📊' },
-		{ href: '/histogram', label: 'Histogram', icon: '📈' },
-		{ href: '/curve', label: 'Yield Curve', icon: '📉' },
-		{ href: '/panes', label: 'Multiple Panes', icon: '🔲' },
-		{ href: '/price-scale', label: 'Price Scale', icon: '📏' },
-		{ href: '/time-scale', label: 'Time Scale', icon: '⏱️' },
-		{ href: '/legends', label: 'Legends', icon: '🏷️' },
-		{ href: '/markers', label: 'Markers', icon: '📍' }
+		{ href: resolve('/'), label: 'Home', icon: '🏠' },
+		{ href: resolve('/bar'), label: 'Bar Chart', icon: '📊' },
+		{ href: resolve('/histogram'), label: 'Histogram', icon: '📈' },
+		{ href: resolve('/curve'), label: 'Yield Curve', icon: '📉' },
+		{ href: resolve('/panes'), label: 'Multiple Panes', icon: '🔲' },
+		{ href: resolve('/price-scale'), label: 'Price Scale', icon: '📏' },
+		{ href: resolve('/time-scale'), label: 'Time Scale', icon: '⏱️' },
+		{ href: resolve('/legends'), label: 'Legends', icon: '🏷️' },
+		{ href: resolve('/markers'), label: 'Markers', icon: '📍' }
 	];
 </script>
 
