@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { Chart, AreaSeries, CandlestickSeries, ColorType } from '../lib/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import { Badge } from '$lib/components/ui/badge/index.js';
 
 	// Chart options
 	const chartOptions = {
@@ -40,122 +43,145 @@
 
 <svelte:head>
 	<title>Svelte Lightweight Charts - Demo</title>
-	<meta name="description" content="Modern Svelte component library for TradingView Lightweight Charts v5">
+	<meta
+		name="description"
+		content="Modern Svelte component library for TradingView Lightweight Charts v5"
+	/>
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-6 py-8">
 	<!-- Hero Section -->
-	<div class="text-center mb-12">
-		<h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-			Svelte Lightweight Charts
-		</h1>
-		<p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-			A modern, type-safe Svelte component library for TradingView's Lightweight Charts v5. 
-			Build beautiful, interactive financial charts with declarative components.
+	<div class="mb-12 text-center">
+		<h1 class="mb-4 text-4xl font-bold md:text-5xl">Svelte Lightweight Charts</h1>
+		<p class="mx-auto mb-8 max-w-3xl text-xl text-muted-foreground">
+			A modern, type-safe Svelte component library for TradingView's Lightweight Charts v5. Build
+			beautiful, interactive financial charts with declarative components.
 		</p>
-		<div class="flex justify-center space-x-4">
-			<span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">Svelte 5</span>
-			<span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">TypeScript</span>
-			<span class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full">Lightweight Charts v5</span>
+		<div class="flex justify-center space-x-2">
+			<Badge variant="secondary">Svelte 5</Badge>
+			<Badge variant="secondary">TypeScript</Badge>
+			<Badge variant="secondary">Lightweight Charts v5</Badge>
 		</div>
 	</div>
 
 	<!-- Main Demo Chart -->
-	<div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-		<h2 class="text-2xl font-semibold text-gray-800 mb-4">Combined Chart Example</h2>
-		<p class="text-gray-600 mb-6">
-			This example demonstrates combining multiple series types in a single chart - an area series for background data 
-			and candlestick series for price action.
-		</p>
-		
-		<Chart 
-			bind:this={chart} 
-			width={900} 
-			height={500} 
-			options={chartOptions} 
-			class="border border-gray-200 rounded mb-4"
-		>
-			<AreaSeries
-				data={areaData}
-				lineColor="#2962FF"
-				topColor="#2962FF"
-				bottomColor="rgba(41, 98, 255, 0.28)"
-				title="Area Series"
-			/>
-			<CandlestickSeries
-				data={candlestickData}
-				upColor="#26a69a"
-				downColor="#ef5350"
-				borderVisible={false}
-				wickUpColor="#26a69a"
-				wickDownColor="#ef5350"
-				title="Candlestick Series"
-			/>
-		</Chart>
+	<Card class="mb-8">
+		<CardHeader>
+			<CardTitle>Combined Chart Example</CardTitle>
+			<CardDescription>
+				This example demonstrates combining multiple series types in a single chart - an area series
+				for background data and candlestick series for price action.
+			</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<Chart
+				bind:this={chart}
+				width={900}
+				height={500}
+				options={chartOptions}
+				class="mb-4 rounded border"
+			>
+				<AreaSeries
+					data={areaData}
+					lineColor="#2962FF"
+					topColor="#2962FF"
+					bottomColor="rgba(41, 98, 255, 0.28)"
+					title="Area Series"
+				/>
+				<CandlestickSeries
+					data={candlestickData}
+					upColor="#26a69a"
+					downColor="#ef5350"
+					borderVisible={false}
+					wickUpColor="#26a69a"
+					wickDownColor="#ef5350"
+					title="Candlestick Series"
+				/>
+			</Chart>
 
-		<button
-			class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-			on:click={() => chart?.timeScale()?.fitContent()}
-		>
-			Fit Content
-		</button>
-	</div>
+			<Button onclick={() => chart?.timeScale()?.fitContent()}>
+				Fit Content
+			</Button>
+		</CardContent>
+	</Card>
 
 	<!-- Features Grid -->
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-		<div class="bg-white rounded-lg shadow p-6">
-			<div class="text-2xl mb-3">🎯</div>
-			<h3 class="text-lg font-semibold text-gray-800 mb-2">Type-Safe</h3>
-			<p class="text-gray-600 text-sm">
-				Built with TypeScript, providing full type safety and excellent developer experience with autocomplete and error checking.
-			</p>
-		</div>
-		
-		<div class="bg-white rounded-lg shadow p-6">
-			<div class="text-2xl mb-3">⚡</div>
-			<h3 class="text-lg font-semibold text-gray-800 mb-2">Reactive</h3>
-			<p class="text-gray-600 text-sm">
-				Leverages Svelte 5's reactivity system for automatic updates when your data changes, with efficient re-rendering.
-			</p>
-		</div>
-		
-		<div class="bg-white rounded-lg shadow p-6">
-			<div class="text-2xl mb-3">🧩</div>
-			<h3 class="text-lg font-semibold text-gray-800 mb-2">Declarative</h3>
-			<p class="text-gray-600 text-sm">
-				Simple, declarative component API that feels natural to Svelte developers while exposing the full power of Lightweight Charts.
-			</p>
-		</div>
-		
-		<div class="bg-white rounded-lg shadow p-6">
-			<div class="text-2xl mb-3">📊</div>
-			<h3 class="text-lg font-semibold text-gray-800 mb-2">All Series Types</h3>
-			<p class="text-gray-600 text-sm">
-				Supports all chart types: Line, Area, Bar, Candlestick, Histogram, and Baseline series with full customization.
-			</p>
-		</div>
-		
-		<div class="bg-white rounded-lg shadow p-6">
-			<div class="text-2xl mb-3">🔲</div>
-			<h3 class="text-lg font-semibold text-gray-800 mb-2">Multiple Panes</h3>
-			<p class="text-gray-600 text-sm">
-				Create charts with multiple panes to separate different data types like price, volume, and technical indicators.
-			</p>
-		</div>
-		
-		<div class="bg-white rounded-lg shadow p-6">
-			<div class="text-2xl mb-3">🎨</div>
-			<h3 class="text-lg font-semibold text-gray-800 mb-2">Customizable</h3>
-			<p class="text-gray-600 text-sm">
-				Extensive styling options and theme support to match your application's design with custom colors and layouts.
-			</p>
-		</div>
+	<div class="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+		<Card>
+			<CardContent class="pt-6">
+				<div class="mb-3 text-2xl">🎯</div>
+				<CardTitle class="mb-2">Type-Safe</CardTitle>
+				<CardDescription>
+					Built with TypeScript, providing full type safety and excellent developer experience with
+					autocomplete and error checking.
+				</CardDescription>
+			</CardContent>
+		</Card>
+
+		<Card>
+			<CardContent class="pt-6">
+				<div class="mb-3 text-2xl">⚡</div>
+				<CardTitle class="mb-2">Reactive</CardTitle>
+				<CardDescription>
+					Leverages Svelte 5's reactivity system for automatic updates when your data changes, with
+					efficient re-rendering.
+				</CardDescription>
+			</CardContent>
+		</Card>
+
+		<Card>
+			<CardContent class="pt-6">
+				<div class="mb-3 text-2xl">🧩</div>
+				<CardTitle class="mb-2">Declarative</CardTitle>
+				<CardDescription>
+					Simple, declarative component API that feels natural to Svelte developers while exposing the
+					full power of Lightweight Charts.
+				</CardDescription>
+			</CardContent>
+		</Card>
+
+		<Card>
+			<CardContent class="pt-6">
+				<div class="mb-3 text-2xl">📊</div>
+				<CardTitle class="mb-2">All Series Types</CardTitle>
+				<CardDescription>
+					Supports all chart types: Line, Area, Bar, Candlestick, Histogram, and Baseline series with
+					full customization.
+				</CardDescription>
+			</CardContent>
+		</Card>
+
+		<Card>
+			<CardContent class="pt-6">
+				<div class="mb-3 text-2xl">🔲</div>
+				<CardTitle class="mb-2">Multiple Panes</CardTitle>
+				<CardDescription>
+					Create charts with multiple panes to separate different data types like price, volume, and
+					technical indicators.
+				</CardDescription>
+			</CardContent>
+		</Card>
+
+		<Card>
+			<CardContent class="pt-6">
+				<div class="mb-3 text-2xl">🎨</div>
+				<CardTitle class="mb-2">Customizable</CardTitle>
+				<CardDescription>
+					Extensive styling options and theme support to match your application's design with custom
+					colors and layouts.
+				</CardDescription>
+			</CardContent>
+		</Card>
 	</div>
 
 	<!-- Quick Start Code Example -->
-	<div class="bg-gray-900 text-white rounded-lg p-6">
-		<h3 class="text-xl font-semibold mb-4">Quick Start</h3>
-		<pre class="text-sm overflow-x-auto"><code>&lt;script&gt;
+	<Card class="bg-gray-900 text-white">
+		<CardHeader>
+			<CardTitle class="text-white">Quick Start</CardTitle>
+		</CardHeader>
+		<CardContent>
+			<pre class="overflow-x-auto text-sm"><code
+					>&lt;script&gt;
   import &#123; Chart, LineSeries &#125; from 'svelte-lightweight-charts';
   
   const data = [
@@ -167,6 +193,8 @@
 
 &lt;Chart width=&#123;800&#125; height=&#123;400&#125;&gt;
   &lt;LineSeries &#123;data&#125; color="#2962FF" title="Price" /&gt;
-&lt;/Chart&gt;</code></pre>
-	</div>
+&lt;/Chart&gt;</code
+				></pre>
+		</CardContent>
+	</Card>
 </div>

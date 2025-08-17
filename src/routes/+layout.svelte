@@ -1,6 +1,26 @@
 <script lang="ts">
+	import { ModeWatcher } from 'mode-watcher';
 	import '../app.css';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
+	import { Toaster } from '$lib/components/ui/sonner/index.js';
+	import {
+		Sidebar,
+		SidebarContent,
+		SidebarFooter,
+		SidebarGroup,
+		SidebarGroupContent,
+		SidebarGroupLabel,
+		SidebarHeader,
+		SidebarInset,
+		SidebarMenu,
+		SidebarMenuButton,
+		SidebarMenuItem,
+		SidebarProvider,
+		SidebarTrigger
+	} from '$lib/components/ui/sidebar/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { Badge } from '$lib/components/ui/badge/index.js';
+	import ThemeToggle from '$lib/components/theme-toggle.svelte';
 
 	let { children } = $props();
 
@@ -17,55 +37,80 @@
 	];
 </script>
 
-<div class="min-h-screen bg-gray-50">
-	<header class="bg-white shadow-sm border-b border-gray-200">
-		<div class="container mx-auto px-4">
-			<div class="flex items-center justify-between h-16">
+<ModeWatcher />
+<Toaster />
+
+<SidebarProvider>
+	<Sidebar>
+		<SidebarHeader>
+			<div class="flex items-center space-x-2 px-2 py-2">
 				<div class="flex items-center space-x-2">
-					<h1 class="text-xl font-bold text-gray-900">Svelte Lightweight Charts</h1>
-					<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">v5</span>
+					<span class="text-lg">📈</span>
+					<div>
+						<h2 class="text-lg font-semibold">Lightweight Charts</h2>
+						<div class="flex items-center space-x-1">
+							<span class="text-xs text-muted-foreground">Svelte 5</span>
+							<Badge variant="secondary" class="h-4 text-xs">v5</Badge>
+						</div>
+					</div>
 				</div>
-				<nav class="hidden md:flex space-x-1">
-					{#each navigation as item}
-						<a
-							href={item.href}
-							class="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors
-								{$page.url.pathname === item.href 
-									? 'bg-blue-100 text-blue-700' 
-									: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}"
+			</div>
+		</SidebarHeader>
+
+		<SidebarContent>
+			<SidebarGroup>
+				<SidebarGroupLabel>Chart Examples</SidebarGroupLabel>
+				<SidebarGroupContent>
+					<SidebarMenu>
+						{#each navigation as item}
+							<SidebarMenuItem>
+								<SidebarMenuButton asChild>
+									<a href={item.href} class={page.url.pathname === item.href ? 'bg-sidebar-accent text-sidebar-accent-foreground' : ''}>
+										<span class="mr-2">{item.icon}</span>
+										{item.label}
+									</a>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						{/each}
+					</SidebarMenu>
+				</SidebarGroupContent>
+			</SidebarGroup>
+		</SidebarContent>
+
+		<SidebarFooter>
+			<div class="px-2 py-2">
+				<div class="text-xs text-muted-foreground">
+					<div class="mb-1">Built with Svelte 5</div>
+					<div>
+						<a 
+							href="https://tradingview.github.io/lightweight-charts/" 
+							class="text-blue-600 hover:text-blue-700"
+							target="_blank"
+							rel="noopener noreferrer"
 						>
-							<span>{item.icon}</span>
-							<span>{item.label}</span>
+							TradingView Charts
 						</a>
-					{/each}
-				</nav>
-				<div class="md:hidden">
-					<button class="text-gray-600 hover:text-gray-900 p-2" aria-label="Open navigation menu">
-						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-						</svg>
-					</button>
+					</div>
 				</div>
 			</div>
-		</div>
-	</header>
+		</SidebarFooter>
+	</Sidebar>
 
-	<main class="flex-1">
-		{@render children()}
-	</main>
-
-	<footer class="bg-white border-t border-gray-200 mt-12">
-		<div class="container mx-auto px-4 py-6">
-			<div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-				<div class="text-sm text-gray-600">
-					Built with <a href="https://svelte.dev" class="text-blue-600 hover:text-blue-700 font-medium">Svelte 5</a> 
-					and <a href="https://tradingview.github.io/lightweight-charts/" class="text-blue-600 hover:text-blue-700 font-medium">TradingView Lightweight Charts</a>
-				</div>
-				<div class="flex space-x-4 text-sm">
-					<a href="https://github.com" class="text-gray-600 hover:text-gray-900">GitHub</a>
-					<a href="https://tradingview.github.io/lightweight-charts/docs" class="text-gray-600 hover:text-gray-900">Documentation</a>
+	<SidebarInset>
+		<header class="flex h-16 shrink-0 items-center gap-2 border-b">
+			<div class="flex items-center gap-2 px-3">
+				<SidebarTrigger />
+				<div class="h-4 w-px bg-sidebar-border"></div>
+				<div class="flex items-center space-x-2">
+					<h1 class="text-lg font-semibold">
+						{navigation.find(item => item.href === page.url.pathname)?.label || 'Svelte Lightweight Charts'}
+					</h1>
 				</div>
 			</div>
-		</div>
-	</footer>
-</div>
+		</header>
+
+		<main class="flex-1 overflow-auto">
+			{@render children()}
+		</main>
+	</SidebarInset>
+</SidebarProvider>
